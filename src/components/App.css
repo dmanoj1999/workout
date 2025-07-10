@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #f0f0f0;
+}
+
+.App {
+    text-align: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.App-header {
+    background-color: #282c34;
+    padding: 1.5rem;
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+/* Navigation Styles */
+.day-nav {
+  background-color: #f5f5f5;
+  padding: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.day-nav ul {
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.day-nav li {
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.day-nav button {
+  width: 100%;
+  padding: 0.8rem 0.2rem;
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.day-nav button:hover {
+  background-color: #e9e9e9;
+}
+
+.day-nav button.active {
+  border-bottom: 3px solid #4CAF50;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+/* Content Styles */
+.day-content {
+  margin: 1.5rem auto;
+  max-width: 800px;
+  padding: 0 1rem;
+}
+
+.day-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.day-image:hover {
+  transform: scale(1.02);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .day-nav ul {
+    flex-wrap: wrap;
+  }
+  
+  .day-nav li {
+    flex-basis: 33.33%;
+  }
+}
+
+@media (max-width: 480px) {
+  .day-nav li {
+    flex-basis: 50%;
+  }
+  
+  .day-nav button {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.1rem;
+  }
+}
