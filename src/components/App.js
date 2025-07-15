@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
+import TodoList from './TodoList';
+import Diet from './Diet'; // <-- Add this import
 // Import the images
 import day1Image from '../assets/day1.png'; // Monday
 import day2Image from '../assets/day2.jpg'; // Tuesday
@@ -11,6 +13,11 @@ import day7Image from '../assets/day7.png'; // Sunday
 
 function App() {
   const [activeDay, setActiveDay] = useState(new Date().getDay());
+  const [showTodo, setShowTodo] = useState(false);
+  const [showDiet, setShowDiet] = useState(false); // <-- Add this state
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   
   // Map day indices to images
@@ -24,6 +31,21 @@ function App() {
     day6Image  // Saturday (index 6)
   ];
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -32,30 +54,93 @@ function App() {
       
       <nav className="day-nav">
         <ul>
-          {weekdays.map((day, index) => (
-            <li key={index}>
-              <button 
-                className={activeDay === index ? 'active' : ''} 
-                onClick={() => setActiveDay(index)}
+          {/* Todo List nav item */}
+          <li>
+            <button
+              className={showTodo ? 'active' : ''}
+              onClick={() => {
+                setShowTodo(true);
+                setShowDiet(false);
+              }}
+            >
+              Todo List
+            </button>
+          </li>
+          {/* Diet nav item */}
+          <li>
+            <button
+              className={showDiet ? 'active' : ''}
+              onClick={() => {
+                setShowDiet(true);
+                setShowTodo(false);
+              }}
+            >
+              Diet
+            </button>
+          </li>
+          {/* Weekdays dropdown nav */}
+          <li>
+            <div className="dropdown" ref={dropdownRef}>
+              <button
+                className={!showTodo && !showDiet ? 'active' : ''}
+                onClick={() => setDropdownOpen((open) => !open)}
               >
-                {day}
+                {weekdays[activeDay]} ▼
               </button>
-            </li>
-          ))}
+              {dropdownOpen && (
+                <div className="dropdown-content">
+                  <button
+                    onClick={() => {
+                      setActiveDay(new Date().getDay());
+                      setShowTodo(false);
+                      setShowDiet(false);
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    Today ({weekdays[new Date().getDay()]})
+                  </button>
+                  {weekdays.map((day, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setActiveDay(index);
+                        setShowTodo(false);
+                        setShowDiet(false);
+                        setDropdownOpen(false);
+                      }}
+                      style={{
+                        fontWeight: activeDay === index && !showTodo && !showDiet ? 'bold' : 'normal'
+                      }}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
         </ul>
       </nav>
       
       <main>
-        <p>
-          These are the workouts for the {weekdays[activeDay]}.
-        </p>
-        <div className="day-content">
-          <img 
-            src={dayImages[activeDay]}
-            alt={`${weekdays[activeDay]} Workout Plan`}
-            className="day-image"
-          />
-        </div>
+        {showTodo ? (
+          <TodoList />
+        ) : showDiet ? (
+          <Diet />
+        ) : (
+          <>
+            <p>
+              These are the workouts for the {weekdays[activeDay]}.
+            </p>
+            <div className="day-content">
+              <img 
+                src={dayImages[activeDay]}
+                alt={`${weekdays[activeDay]} Workout Plan`}
+                className="day-image"
+              />
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
